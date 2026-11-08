@@ -1,0 +1,198 @@
+:root {
+  --fundo: #f5f7f4;
+  --cartao: #ffffff;
+  --texto: #1f2a24;
+  --texto-suave: #6b7a72;
+  --borda: #dfe6e1;
+  --destaque: #2e7d4f;
+  --destaque-escuro: #236240;
+  --perigo: #c62828;
+  --perigo-claro: #fdecea;
+  --raio: 12px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: "Segoe UI", system-ui, -apple-system, Roboto, sans-serif;
+  background: var(--fundo);
+  color: var(--texto);
+  line-height: 1.5;
+  min-height: 100vh;
+}
+
+/* Layout principal em grid */
+.app {
+  display: grid;
+  grid-template-columns: minmax(0, 720px);
+  justify-content: center;
+  gap: 1.5rem;
+  padding: 1.5rem 1rem 6rem;
+}
+
+.topo {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-areas: "voltar titulo";
+  align-items: center;
+  gap: 1rem;
+}
+.btn-voltar { grid-area: voltar; }
+h1 { grid-area: titulo; font-size: 1.75rem; text-align: center; }
+
+button { font: inherit; cursor: pointer; border: 0; }
+button:focus-visible, input:focus-visible {
+  outline: 3px solid #8fd1a8;
+  outline-offset: 2px;
+}
+
+.btn-voltar {
+  background: transparent;
+  color: var(--destaque);
+  border: 1px solid var(--destaque);
+  padding: .5rem .9rem;
+  border-radius: 8px;
+  font-weight: 600;
+}
+.btn-voltar:hover { background: var(--destaque); color: #fff; }
+
+/* Formulário em grid: input + botão lado a lado */
+.form-add {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-areas:
+    "input botao"
+    "erro  erro";
+  gap: .5rem .75rem;
+  margin-bottom: 1.25rem;
+}
+#inputItem {
+  grid-area: input;
+  padding: .8rem 1rem;
+  border: 1px solid var(--borda);
+  border-radius: var(--raio);
+  font-size: 1rem;
+  background: var(--cartao);
+  min-width: 0;
+}
+#inputItem.invalido { border-color: var(--perigo); }
+.btn-add {
+  grid-area: botao;
+  background: var(--destaque);
+  color: #fff;
+  padding: .8rem 1.4rem;
+  border-radius: var(--raio);
+  font-weight: 700;
+  box-shadow: 0 4px 12px rgba(46,125,79,.35);
+  transition: background .2s, transform .1s;
+}
+.btn-add:hover { background: var(--destaque-escuro); }
+.btn-add:active { transform: scale(.97); }
+.erro { grid-area: erro; color: var(--perigo); font-size: .9rem; }
+
+/* Lista em grid: cartões se organizam sozinhos */
+.lista {
+  list-style: none;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: .75rem;
+}
+
+.item {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: .9rem;
+  background: var(--cartao);
+  border: 1px solid var(--borda);
+  border-radius: var(--raio);
+  padding: .85rem 1rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,.06);
+  animation: entrar .25s ease;
+}
+.item input[type="checkbox"] {
+  width: 1.3rem;
+  height: 1.3rem;
+  accent-color: var(--destaque);
+  cursor: pointer;
+}
+.item .nome { overflow-wrap: anywhere; transition: opacity .2s; }
+.item.concluido .nome { text-decoration: line-through; opacity: .5; }
+.item.concluido { background: #eef3ef; }
+
+.btn-remover {
+  background: transparent;
+  font-size: 1.2rem;
+  padding: .35rem .5rem;
+  border-radius: 8px;
+}
+.btn-remover {
+  background: transparent;
+  font-size: 1.2rem;
+  padding: .35rem .5rem;
+  border-radius: 8px;
+  display: grid;
+  place-items: center;
+}
+.icone-alerta, .icone-lixeira {
+  width: 1.2em;
+  height: 1.2em;
+  display: block;
+  object-fit: contain;
+}
+.icone-lixeira {
+  width: 1em;
+  height: 1em;
+  display: block;
+  object-fit: contain;
+}
+.btn-remover:hover { background: var(--perigo-claro); }
+
+.vazio { text-align: center; color: var(--texto-suave); padding: 2rem 0; }
+
+/* Alerta fixo na parte inferior */
+.alerta {
+  position: fixed;
+  left: 50%;
+  bottom: 1.25rem;
+  transform: translateX(-50%);
+  width: min(92vw, 460px);
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: .75rem;
+  background: var(--perigo-claro);
+  color: var(--perigo);
+  border: 1px solid var(--perigo);
+  border-radius: var(--raio);
+  padding: .8rem 1rem;
+  font-weight: 600;
+  box-shadow: 0 6px 20px rgba(0,0,0,.15);
+  animation: subir .25s ease;
+}
+.alerta[hidden] { display: none; }
+.alerta-fechar { background: transparent; color: var(--perigo); font-size: 1.1rem; padding: .2rem .4rem; }
+
+@keyframes entrar { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: none; } }
+@keyframes subir  { from { opacity: 0; transform: translate(-50%, 12px); } to { opacity: 1; transform: translate(-50%, 0); } }
+
+/* Tablet/desktop: lista em 2 colunas */
+@media (min-width: 768px) {
+  .app { grid-template-columns: minmax(0, 960px); padding-top: 2.5rem; }
+  .lista { grid-template-columns: repeat(2, 1fr); }
+  h1 { font-size: 2.1rem; }
+}
+
+/* Celular */
+@media (max-width: 480px) {
+  h1 { font-size: 1.3rem; }
+  .form-add {
+    grid-template-columns: 1fr;
+    grid-template-areas: "input" "botao" "erro";
+  }
+  .btn-add { width: 100%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; }
+}
